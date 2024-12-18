@@ -28,7 +28,8 @@
 %\captionsetup[figure]{name=Figure}
 %\renewcommand{\thetable}{\Roman{table}}
 %\renewcommand{\thefigure}{\Roman{figure}}
-\doublespacing
+%\doublespacing
+\linespread{1.5}
 % ...
 % In this area
 % The UTF-8 encoding is specified.
@@ -91,7 +92,6 @@ For the main analysis, I use National Commission of Water's (CONAGUA) monthly dr
 
 The Monitor de Sequía de México (MSM) classifies drought into five categories based on the probability of occurrence over a 100-year period. These categories range from D0 (Abnormally Dry) to D4 (Exceptional Drought) and reflect increasing severity, with each category associated with specific characteristics and impacts. Table \ref{tab:drought_cat} describes the main features of this categorization.
 
-\input{tables/droughts/categories_of_drought}
 
 Although the drought categories in the MSM are typically experienced in a gradual sequence—from D0 (Abnormally Dry) to D4 (Exceptional Drought)—they are not strictly sequential. In some cases, drought conditions may shift directly from one category to another without passing through all intermediate stages. For instance, a region might jump from D1 (Moderate Drought) to D3 (Extreme Drought) if conditions deteriorate rapidly due to severe weather events like heatwaves. Conversely, a region can also improve quickly, moving from D2 (Severe Drought) to D0 if there is significant rainfall (\cite{lobato2016drought}, \cite{usdrought2002}). 
 
@@ -111,323 +111,70 @@ To evaluate pregnancy and newborn health, I use administrative patient discharge
 
 While this data is valuable, it does not cover the entire population as it excludes major public health institutions like IMSS and ISSSTE. Therefore, it should be considered a partial proxy for analyzing pregnancy and newborn health.
 
-\section{Descriptive statistics}
-
-\begin{figure}[!ht]
-    \centering
-    \caption{Geographical variation of registered droughts}
-    % Adjust the minipage width as needed. Here, we use 0.32 to fit three figures.
-    % You might need to adjust these numbers depending on your document's layout.
-    % First minipage
-    \begin{minipage}[b]{0.55\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/drought_2010.png} % Update the file name as needed
-        \caption*{Panel a) 2010}
-    \end{minipage}
-    \hfill % this will insert a little space between your minipages
-    % Second minipage
-    \begin{minipage}[b]{0.55\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/drought_2011.png} % Update the file name as needed
-        \caption*{Panel b) 2011}
-    \end{minipage}
-    \hfill
-    % Third minipage
-    \begin{minipage}[b]{0.55\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/drought_2012.png} % Update the file name as needed
-        \caption*{Panel c) 2012}
-    \end{minipage}
-    \label{fig:droughts_geographical}
-    \caption*{\footnotesize{Notes: Most intense red color reflects 12 months with drought registries in D2, D3, or D4. Yellow color reflects 0 registries of drought of those categories}}
-\end{figure}
-
-
-
-\clearpage
-\newpage
-
-\begin{table}[!ht]
-\begin{center}
-\caption{Descriptive Statistics. Drought categories}\label{tab:descriptives_drought}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lccccc}  
-\toprule
-
-\textbf{Panel A. Birth outcomes} &&& && \\
-
-\input{tables/droughts/birthoutcomes_descriptive_drought} \\
-
-\textbf{Panel B. Newborn and mother's hospitalizations} &&& && \\
-\input{tables/droughts/hospitalizations_descriptive_drought} \\
-
-\bottomrule
-\end{tabular}}
-\noindent
-\caption*{\footnotesize{Notes:  }}
-\end{center}
-\end{table}
-
-\clearpage
-\newpage
-
-
-
-
 \section{Methods}
 
-I closely follow the methodology used in previous research \cite{Bailey2015}, \cite{Mullins2020}, \cite{Cohen2022} to explore the effects of weather conditions, specifically the impact of drought intensity on pregnancy, births, and newborn health outcomes. Drought intensity is measured using CONAGUA's monthly Drought Monitor index whose scale ranges from abnormally dry (D0) to exceptional drought (D4). Categories D3-D4 are pooled together to ensure enough variation in the higher end of drought.
-
-Using CONAGUA's monthly Drought Monitor index, this empirical strategy captures nonlinear effects on outcomes by exploiting drought categorizations from the preceding month to explain current outcomes. Drought effects often accumulate and are not immediately apparent, as droughts typically intensify or recede gradually. Health outcomes, such as those related to water scarcity or air quality, may take time to manifest. Therefore, a 1-month lag drought measure could better capture the delayed effects on current health outcomes, aligning with the gradual onset and impact of droughts.\footnote{I also use current month drought measures, but these soesnt change the estimates by much. I present these results in the Appendix}
-
-Specifically, I consider a fixed-effects linear regression model of the form:
+As a first approach, I employ a two-way fixed-effects linear regression model (\cite{Bailey2015}, \cite{Mullins2020}, \cite{Cohen2022}). The unit of analysis is the municipality, while the time dimension is defined as the month-year of either birth or hospitalization, depending on the specific outcome being analyzed. The model is specified as follows:
 
 \begin{align}
 \begin{aligned}
-Y_{imy} &= \beta_0 + \sum_{k=1}^{3/4} \beta_k D^k_{i(m-1)y} + \phi_1 \cdot Temp_{imy} + \lambda_i + \lambda_{my} + \epsilon_{im}
+Y_{imy} &= \beta_0 + \beta_1 D^{Moderate}_{i(m-1)y} + \beta_2 D^{Severe}_{i(m-1)y} + \phi_1 \cdot Temp_{imy} + \lambda_i + \lambda_{my} + \epsilon_{imy}
 \end{aligned}
-\label{eq:temp_regression}
+\label{eq:twfe_basic}
 \end{align}
 
-where $Y_{imy}$ is the outcome in municipality $i$ in month $m$ and year $y$. $\sum_{k=0}^{3/4} \beta_k D_{ki(m-1)y}$ captures the effects of drought intensity across categories $D^0$ to $D^{3/4}$, measured in the previous month. The model includes municipality-specific fixed effects ($\lambda_i$) to account for time-invariant characteristics, month-by-year fixed effects ($\lambda_{my}$) for unobserved factors affecting monthly outcomes across municipalities, and municipality-year fixed effects ($\lambda_{iy}$) to account for differential trends over years.
+Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$. I pool categories D0 and D1 into "Moderate drought conditions" ($D^{Moderate}_{i(m-1)y}$) and categories D2 to D4 into "Severe drought conditions" ($D^{Severe}_{i(m-1)y}$). This aggregation, instead of including the 5 treatments, is motivated by concerns about the potential biases arising from having multiple treatments that switch on and off, as discussed in \cite{deChaisemartin2023} (I will conduct additional robustness checks as needed). 
 
+Moreover, drought effects often accumulate and are not immediately observable because droughts typically intensify or recede gradually. Health outcomes, such as those associated with water scarcity or air quality, may take time to manifest. Therefore, a one-month lag in drought measures is used to better capture the delayed effects on current health outcomes. (Using contemporaneous and additional lags does not substantially change the results.)
 
-The key identifying assumption is that, conditional on the fixed effects and temperatures, the remaining variation from drought intensity is exogenous and uncorrelated with other factors influencing health and birth outcomes. This assumption is widely accepted and used in the literature mentioned in the introduction.
+The model incorporates municipality-specific fixed effects ($\lambda_i$) to control for time-invariant characteristics, month-by-year fixed effects ($\lambda_{my}$) to address unobserved factors that vary over time and affect all municipalities, and municipality-year fixed effects ($\lambda_{iy}$) to capture differential trends across municipalities. Additionally, I include a control for temperature ($Temp_{imy}$) to isolate the effects of drought conditions from temperature-related influences. (I have tested various specifications for temperature controls, and the results remain consistent across them.)
 
+\subsection{Alternative models and estimators}
 
-\section{Results. Impact of Drought on Health}
+Taking into account the current literature, I contrast different models.
 
+\textbf{Basic TWFE}. The first is a regular TWFE model as presented in \ref{eq:twfe_basic}. The main identifying assumption is that, conditional on the fixed effects and temperatures, the remaining variation from drought intensity is exogenous and uncorrelated with other factors influencing health and birth outcomes. This model implicitly assumes parallel trends in the sense that, absent changes in drought conditions, the expected outcome evolution for groups with the same pre-treatment drought levels would have followed a common trend over time. In this setting, with two treatments that switch on and off, the counterfactual trend for each treatment group is defined relative to groups where drought conditions remain constant across periods (If my interpretation of \cite{deChaisemartin20203} is not flawed) .
 
-\subsection{During pregnancy}
+\textbf{TWFE with state-specific linear time trends}. Building on the above base model, I introduce state-specific linear yearly trends. This accounts for unobserved, time-varying state-level factors that may linearly affect birth outcomes over time, ensuring that the estimated drought effects are not confounded by differential long-term trends across states.
 
-We would expect that current temperature has a significant effect on pregnancy outcomes, as extreme environmental conditions during critical periods can impose immediate physiological stress on both the mother and the fetus. Extreme temperatures and drought conditions can induce thermal stress, affecting cardiovascular and thermoregulatory systems, leading to complications such as preterm labor. Additionally, unusual dry conditions can cause dehydration, reduce amniotic fluid, and increase the risk of preterm birth. It can also raise blood pressure, increasing the risk of preeclampsia. Acute weather changes can lead to hospital admissions for both mothers and newborns, as heatwaves may increase existing conditions (\cite{Ha2022}, \cite{Kim2021}).
+\textbf{TWFE with state-specific linear time trends}. Building on the above base model, I introduce other sets of controls, including state-specific linear yearly trends. These trends account for heterogeneity in long-term birth outcome patterns across states, which may arise due to unobserved state-level factors such as local policies, healthcare improvements, or economic conditions evolving over time. 
 
-Figure \ref{fig:effects_pregnancy_drought} panel a) presents the impact of different drought categories on the hospitalization rates of pregnant women, excluding those related to regular deliveries. We can observe that the rate of hospitalizations due to pregnancy complications increases with exposure to more intense drought categories, while the number of consultations shows a seemingly parabolic decreasing trend. In both outcomes, the category corresponding to the most intense drought exposure (D3-D4) has the greatest magnitudes and statistically significant effects.
+\textbf{TWFE with state-specific linear time trends and seasonal controls}. As in \cite{Cohen2022}, I include a full set of municipality-by-calendar month fixed effects to control for seasonality in birth outcomes that may vary across municipalities. This allows me to account for patterns where births occurring in specific months, when temperatures or other environmental conditions tend to remain similar over time, are systematically associated with different outcomes. Combined with state-specific linear yearly trends, this specification addresses both regional long-term dynamics and local seasonal variations.
 
-It is important to note that the timing of exposure differs between these outcomes. For hospitalizations, drought exposure is measured 1 month before the hospitalization occurs, while for prenatal care and total consultations, the exposure is measured 1 month before birth, as this information is recorded at that time. (I have to check this specification as it might make more sense to track the exposure during all the pregnancy rather than 1 month before birth)
+Up to here, the TWFE model relies on its standard assumptions. However, it has been shown (\cite{deChaisemartin2020}, \cite{deChaisemartin2023}) that: 1) With a single treatment turning on and off at different times, and under heterogeneous treatment effects, the TWFE estimator identifies a weighted sum of group-time treatment effects. The weights can be negative, which may distort the estimates or even reverse their sign. 2) When multiple treatments are included, the issue becomes more complex due to contamination bias. This occurs because the estimator combines comparisons between groups exposed to different treatments, which can mix the effect of one treatment with the effects of others. As a result, the coefficient on each treatment may partially reflect the effects of other treatments, introducing bias when treatment effects are heterogeneous.
 
-Table \ref{tab:effects_mothers_drought} provides a detailed breakdown of the magnitudes of these coefficients and includes a variable that measures the rate of cases in which mothers had at least one checkup during their entire pregnancy. As a robustness check, the second column of each subgroup also incorporates municipality-by-calendar-month fixed effects, following the approach of \cite{Cohen2022}, to account for seasonal variations that recur annually within municipalities.
 
-The results in Table \ref{tab:effects_mothers} show that mothers' hospitalizations increase as drought severity rises, with coefficients for D2 (17.96) and D3-D4 (17.65) indicating a significant increase in pregnancy-related hospital admissions per 1,000 births. \footnote{Specifications using the log of the number of hospitalizations, instead of the rate, were also tested. The results are qualitatively similar and are presented in the Appendix.} This pattern suggests that more intense droughts are linked to higher rates of pregnancy complications, as reported in previous research. On the other hand, prenatal care appears largely unaffected, except for the more severe drought categories, with minimal changes in the share of women receiving at least one check-up. Total consultations, show a gradual decline as drought severity increases, especially for D3-D4. This could reflect barriers to accessing care or shifts in healthcare-seeking behavior during extreme drought periods.
+\textbf{Alternative estimator (deCh-H)}. Finally, I also test the alternative estimator from \cite{deChaisemartin2023}, which is fit for my case. My case involves two mutually exclusive treatments, defined at the municipality and year-month level, that switch on and off dynamically.
 
-In terms of magnitudes, the increase in hospitalizations for severe droughts (D3-D4) translates to about 17 additional hospitalizations per 1,000 births monthly, which is substantial. Meanwhile, the reduction in total consultations, while smaller, indicates a drop of approximately 0.048 consultations per 1,000 births. While not all coefficients are statistically significant, the general escalation in hospitalization rates with more intense droughts aligns with what we would expect given the potential health risks posed by such environmental stressors.
+The intuition of the estimator relies on identifying variation in treatment that comes from groups whose treatment changes between two periods while other treatments remain constant. By comparing these "switching" groups to others with identical treatment histories that do not change, it isolates the impact of the treatment transition. This method uses within-group and over-time variation to construct counterfactuals, focusing on more localized comparisons than standard TWFE.
 
+The estimator relies on two assumptions: strong exogeneity and parallel trends, as defined in Assumptions 4 and 5 \cite{deChaisemartin2023}. Assumption 4 identifies treatment effects for groups whose treatment changes between consecutive periods $t-1$ and $t$, conditioning on their treatment status at $t-1$. This focuses on transitions where comparisons rely on the previous treatment state to construct counterfactuals. Assumption 5 shifts the conditioning to treatment status at $t$, expanding identification to include transitions defined by the current treatment state, rather than past status. Together, these assumptions broaden the set of transitions for which effects can be identified, including both "switching into" and "switching out of" treatment.
 
-\begin{figure}[!ht]
-    \centering
-    \caption{Effects during pregnancy}
-    \begin{minipage}[b]{0.6\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures_2410/02_maternal_muni_by_Dcategory.png} % Update the file name as needed
-     \caption*{Panel a) Hospitalizations}
-    \end{minipage}
-    \begin{minipage}[b]{0.6\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures_2410/02_total_consult_muni_by_Dcategory.png} % Update the file name as needed
- \caption*{Panel b) Number of consultations }
-    \end{minipage}
-    \label{fig:effects_pregnancy_drought}
-    \caption*{\footnotesize{Notes: Panel a) shows the effect of drought intensity on the hospitalizations rate of women due to pregnancy complications per 1000 births. Drought intensity is measured using CONAGUA's monthly Drought Monitor index whose scale ranges from abnormally dry (D0) to exceptional drought (D4).Categories D3-D4 are pooled together to ensure enough variation in the higher end of drought. Pregnancy complications are defined according to the ICD-10 codes O00-O9A corresponding to Pregnancy, childbirth and the puerperium. Codes O80, O81, and O82 are omitted because they correspond to regular labor and delivery. This measure comes from the SSA discharges database. Panel b) present the results for the total number of consultations or checkups during pregnancy.This variable comes from the birth certificates (SINAC) database. Standard errors are clustered at the municipality-calendar month level.}}
-\end{figure}
+Parallel trends under Assumptions 4 and 5 in my setting mean that municipalities with stable drought conditions provide a counterfactual for those transitioning between treatments over consecutive months. This requires that the change in health outcomes for municipalities transitioning between drought categories matches the change observed in municipalities with stable conditions during the same period, conditional on their treatment histories. The comparison relies on consecutive-period dynamics, so counterfactual trends are constructed from groups with similar short-term treatment trajectories.
 
-\clearpage
-\newpage
 
-\begin{table}[!ht]
-\centering
-\caption{Effects of drought during pregnancy}\label{tab:effects_mothers_drought}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabularx}{\textwidth}{Xcccccc}
-\toprule
-&\multicolumn{2}{c}{Hospitalizations} &\multicolumn{2}{c}{Any prenatal care} &\multicolumn{2}{c}{Total consultations} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+\section{Very Low Birth Weight}
 
-\midrule
-\input{tables_2410/01a_drought_maternal_outcomes_st} \\
+Just for illustration purposes regarding my way to go on how to conduct the analysis that will be expanded to other variables, I will present here the analysis for a Very Low Birth Weigth (VLBW) measure. Just because, this is the most stable variable I have worked with. In the other section I present a similar analysis for other variables, and the problems I find and don't know what to do about them.
 
-\bottomrule
-\end{tabularx}
-\caption*{\footnotesize{Notes: This table summarizes the effects of drought intensity, as measured using CONAGUA's monthly Drought Monitor index whose scale ranges from abnormally dry (D0) to exceptional drought (D4) on maternal health outcomes. Categories D3-D4 are pooled together to ensure enough variation in the higher end of drought. Hospitalizations are measured as the rate of monthly hospitalizations during pregnancy per 1000 births. Pregnancy complications are defined according to the ICD-10 codes O00-O9A corresponding to Pregnancy, childbirth and the puerperium. Codes O80, O81, and O82 are omitted because they correspond to regular labor and delivery admissions. This measure comes from the SSA discharges database. Any prenatal care is measured as the share of mothers who had at least one consultation or check-up during pregnancy in certain municipality. Total consultations is the average number of consultations during pregnancy within a municipality. These last two variables come from the birth certificates (SINAC) database. All regressions control for current and 1 month lagged temperatures. Standard errors are clustered at the municipality-calendar month level. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
 
 
-\subsection{At birth}
 
-Table \ref{tab:results_at_birth_drought} present results for several birth outcomes. Panel A present point estimates of the main specification that includes the three sets of fixed effects discussed in the methods section, while Panel B includes the municipality-by-month seasonal effects suggested in \cite{Cohen2022} as a robustness check.
 
-The results indicate that drought severity has a cumulative impact on birth outcomes, consistent with medical literature on environmental stress. Although not all coefficients are statistically significant, there is an increasing trend in the estimates for more severe drought categories. Very Low Birth Weight (VLBW) is consistently significant, with larger magnitudes in moderate drought (D1, D2), suggesting that drought-induced maternal stress likely compromises fetal development. This aligns with broader research linking maternal stress to poor birth outcomes, particularly under nutritional or environmental pressure (\cite{Ha2022}, \cite{Meherali2024}). Though the estimates for Low Birth Weight (LBW) and Preterm births are not significant, their positive directions reflect previous established risks related to preterm labor under environmental stress \cite{Jain2021}.
 
-C-section and congenital anomalies show statistically significant effects only under the most severe drought conditions (D3-D4). The rise in C-section rates under extreme drought (6.16 in Panel B) may reflect heightened medical interventions due to fetal distress, consistent with obstetric literature that ties severe maternal stress and environmental hardship to higher-risk deliveries. Similarly, the large increase in congenital anomalies (5.118***) for extreme droughts supports findings from environmental health research linking exposure to heat, pollution, and malnutrition during pregnancy to birth defects \cite{Ha2022}.
 
-To put these results in context, it is helpful to compare the coefficient estimates to the means of the respective outcomes. For VLBW, the increase of 0.770 under moderate drought conditions (D2) represents a 16\% rise relative to the mean of 4.78, suggesting a considerable impact on the likelihood of very low birth weight. For C-sections, the increase of 6.16 under severe drought (D3-D4) corresponds to a modest 1.5\% rise from the mean of 401.54, indicating a smaller, though still meaningful, effect. The most striking result is for congenital anomalies, where the marginal effect of 5.118 under severe drought reflects an 18.5\% rise from the mean of 27.69.
+Following the analysis proposed in \cite{deChaisemartin2023}, I analyze the weights given to each group-time contribution to the weighted sum of treatment effects. Focusing on the coefficient for "Severe droughts", it can be decomposed into two terms. The first term corresponds to the weighted sum of the effects of being exposed to severe drought conditions ($D^{Severe}_{i(m-1)y}$), across 16,327 municipality-month cells. Almost all these cells, except 5, receive positive weights summing to 1, which suggests that this term is less likely to be biased. The second term corresponds to the weighted sum of the effects of moderate drought conditions ($D^{Moderate}_{i(m-1)y}$), across 88,034 municipality-month cells. In this case, 50,757 cells receive positive weights summing to 0.3689, while 37,277 cells receive negative weights summing to -0.3689. If we assume that the effect of moderate droughts is homogeneous across municipalities and periods, the second term introduces no bias. However, this assumption is unlikely to hold in general. 
 
+Therefore, we need to take a closer look. One approach is to compare a "short" regression, which omits the moderate treatment, to a "long" regression that includes both treatments. Following \cite{deChaisemartin2023}, the coefficient on severe droughts in the short regression identifies the sum of two components: a weighted sum of the effects of severe droughts, where the weights sum to one, and a second contamination term associated with moderate droughts. The weights for the contamination term in the short regression do not necessarily sum to zero, and their magnitude depends on the overlap and variation of treatments. Including the moderate treatment in the long regression reduces the contamination but introduces a new set of weights that may exacerbate the bias under heterogeneous treatment effects. To evaluate this trade-off, it is possible to calculate a \textbf{maximal bias} by comparing the contamination weights in the short and long regressions, under the assumption that treatment effects are bounded. For now, I have run the short regression to examine its coefficient on severe droughts, leaving the full comparison and maximal bias analysis for later.
 
-\begin{table}[!ht]
-\begin{center}
-\caption{Effects of drought on birth outcomes}\label{tab:results_at_birth_drought}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabularx}{\textwidth}{Xcccccc}
-\toprule
+\subsection{Other robustness tests}
 
-\textbf{Panel A. Base Model} & & & & & \\
-\input{tables_2410/04a_drought_sinac_table_st} \\
-\midrule
-\textbf{Panel B. Base Model + Seasonal FE} & & & & & \\
-\input{tables_2410/04b_drought_sinac_table_mumonth_st} \\
+\begin{itemize}
+    \item Using the 5 treatments in a TWFE model and the de Chaisemartin estimator.
+    \item Using other timings of Droughts instead of the 1 month lag
+\end{itemize}
 
-\bottomrule
-\end{tabularx}
-\noindent
-\caption*{\footnotesize{This table summarizes the effects of drought intensity on birth outcomes. Drought intensity is measured using CONAGUA's monthly Drought Monitor index, which ranges from abnormally dry (D0) to exceptional drought (D4). Categories D3-D4 are pooled to ensure sufficient variation at the higher end of the drought scale. Birth weight is measured in grams, with Low Birth Weight (LBW) defined as less than 2,500 grams and Very Low Birth Weight (VLBW) as less than 1,500 grams. Preterm refers to births occurring at less than 37 weeks of gestation. C-section is the monthly rate of cesarean deliveries per 1,000 births, and Anomaly refers to the rate of congenital malformations, coded Q00-Q99 according to ICD-10. Standard errors are clustered at the municipality-calendar month level. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{center}
-\end{table}
 
-\clearpage
-\newpage
 
-\subsection{Newborn health}
-
-
-
-\clearpage
-\newpage
-
-
-\begin{table}[!ht]
-\centering
-\caption{Effects of Drought on Newborn Health}\label{tab:hospital_drought}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{lccccc}
-\toprule
-\textbf{Panel A. Base Model} & & & & & \\
-\input{tables_2410/02a_drought_hosp_table_st} \\
-
-\textbf{Panel B. Base Model + Seasonal FE} & & & & & \\
-\input{tables_2410/02b_drought_hosp_table_munmonth_st} \\
-\bottomrule
-\end{tabular}
-\caption*{\footnotesize{Notes: This table summarizes the effects of of drought intensity on newborn health outcomes. Drought intensity is measured using CONAGUA's monthly Drought Monitor index whose scale ranges from abnormally dry (D0) to exceptional drought (D4).Categories D3-D4 are pooled together to ensure enough variation in the higher end of drought. Hospitalizations are measured as the rate of hospitalizations during pregnancy per 1000 births.  Hospitalizations due to specific causes are identified using ICD-10 codes. Respiratory causes include conditions such as bronchitis and pneumonia (codes starting with "J"), digestive causes include intestinal infectious diseases (codes A00-A09), neonatal complications and congenital malformations are indicated by "P" or "Q," and external causes include injuries and accidents (codes "T," "S," "V," "W," "X," or "Y"). These measures comes from the SSA discharges database. Standard errors are clustered at the municipality-calendar month level. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
-
-
-\clearpage
-\newpage
-
-
-
-\section{The effect of Progresa and Seguro Popular}
-
-To investigate the potential shock-absorbing capacity of Progresa and Seguro Popular, I use a method similar to \cite{Barreca2016} and \cite{Cohen2022}. Specifically, I interact the availability of Progresa in each municipality, as measured by the proportion of beneficiary households in each municipality and year, with the indicators of drought intensity. It is important to note that the proportion of Progresa beneficiaries increased slightly year by year, reflecting the expansion in coverage up to 2019 (the year in which Progresa was rolled back).
-
-Because Progresa primarily targets low-income families, the coefficient for the main effect of Progresa cannot be interpreted as causal. Nevertheless, since drought intensity provides exogenous variation, conditional on all fixed effects and covariates, interactions between Progresa and each drought category inform us about the mitigating effect of this conditional cash transfer program on weather vulnerability.
-
-Additionally, I include a set of interactions between each drought category and month-by-year fixed effects to control for the autonomous evolution of weather conditions that are unrelated to the evolution of Progresa's expansion.          
-
-
-\subsection{During pregnancy}
-
-\begin{table}[!ht]
-\centering
-\caption{Effects of Drought on Pregnancy}\label{tab:hospital_drought}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{lcccccc}
-\toprule
-\textbf{Panel A. Progresa} & & & & & & \\
-\input{tables_2410/programs/11pg_drought_maternal_outcomes} \\
-\midrule
-\textbf{Panel B. Seguro Popular} & & & & & & \\
-\input{tables_2410/programs/11sp_drought_maternal_outcomes} \\
-\bottomrule
-\end{tabular}
-\caption*{\footnotesize{Notes: All specifications include municipality FE, municipality-year FE, month-year FE, municipality-by-calendar month FE. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
-
-
-\subsection{At birth}
-
-
-
-
-\subsection{Newborn health after birth}
-
-\begin{table}[!ht]
-\centering
-\caption{Effects of Drought on Newborn Health}\label{tab:hospital_drought}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{lcccccc}
-\toprule
-\textbf{Panel A. Progresa} & & & &  \\
-\input{tables_2410/programs/21PG_hosp_oucomes} \\
-\midrule
-\textbf{Panel B. Seguro Popular} & & & & \\
-\input{tables_2410/programs/21SP_hosp_oucomes} \\
-\bottomrule
-\end{tabular}
-\caption*{\footnotesize{Notes: All specifications include municipality FE, municipality-year FE, month-year FE, municipality-by-calendar month FE. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
-
-\clearpage
-\newpage
-
-
-\section{Heterogeneity in the effect of Progresa and Seguro Popular}
-
-\begin{table}[!ht]
-\centering
-\caption{Program Heterogeneity. Mother's outcomes}\label{tab:program_heterogeneity_mothers}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{lcccccc}
-\toprule
-\textbf{Panel A. Progresa} & & & &  \\
-\input{tables_2410/programs/12pg_drought_maternal_outcomes} \\
-\midrule
-\textbf{Panel B. Seguro Popular} & & & & \\
-\input{tables_2410/programs/12sp_drought_maternal_outcomes} \\
-\bottomrule
-\end{tabular}
-\caption*{\footnotesize{Notes: All specifications include municipality FE, municipality-year FE, month-year FE, municipality-by-calendar month FE. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
-
-\clearpage
-\newpage
-
-
-\begin{table}[!ht]
-\centering
-\caption{Program Heterogeneity. Birth outcomes}\label{tab:program_heterogeneity_birth}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{lcccccc}
-\toprule
-\textbf{Panel A. Progresa} & & & &  \\
-\input{tables_2410/programs/42PG_sinac_heterogeneity_st} \\
-\midrule
-\textbf{Panel B. Seguro Popular} & & & & \\
-\input{tables_2410/programs/42SP_sinac_heterogeneity_st} \\
-\bottomrule
-\end{tabular}
-\caption*{\footnotesize{Notes: All specifications include municipality FE, municipality-year FE, month-year FE, municipality-by-calendar month FE. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
-
-
-
-\clearpage
-\newpage
-
-\begin{table}[!ht]
-\centering
-\caption{Program Heterogeneity. Babies' hospitalizations}\label{tab:program_heterogeneity_babies}
-\fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Panel A. Progresa} & &   \\
-\input{tables_2410/programs/22PG_drought_maternal_outcomes} \\
-\midrule
-\textbf{Panel B. Seguro Popular} & &  \\
-\input{tables_2410/programs/22SP_drought_maternal_outcomes} \\
-\bottomrule
-\end{tabular}
-\caption*{\footnotesize{Notes: All specifications include municipality FE, municipality-year FE, month-year FE, municipality-by-calendar month FE. $^* p<0.1, ^{**} p<0.05, ^{***} p<0.01$.}}
-\end{table}
 
 
 
