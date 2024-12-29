@@ -2,22 +2,36 @@
 \centering
 \caption{Effects of Drought on LBW}\label{tab:twfe_lbw}
 \fontsize{10pt}{12pt}\selectfont
-\begin{tabular}{l|cccc|cccc}
+\begin{tabular}{lcccc}
 \toprule
- \multicolumn{1}{c}{Coefficient} &\multicolumn{4}{c}{Raw count/weighted}&\multicolumn{4}{c}{Rate per 1000 births}\\\cmidrule(lr){2-5}\cmidrule(lr){6-9} \\ &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4}&\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+  Raw count/weighted &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
 \midrule
- $ D_{3,4}  $ & -1.802  & -1.291  & -1.124 & .632 & -.628  & -.675  & -.786 & -.151 
-  & [ -2.827 ,  -.778 ]  & [ -2.267 ,  -.315 ]  & [ -2.092 ,  -.156 ]  & [ -.669 ,  1.934 ]  & [ -2.49 ,  1.233 ]  & [ -2.563 ,  1.213 ]  & [ -2.766 ,  1.194 ]  & [ -11.148 ,  10.845 ]
- \addlinespace
- $ D_2  $ & .175  & .195  & .497 &  & .509  & .414  & .315 & - 
-  & [ -.526 ,  .876 ]  & [ -.518 ,  .908 ]  & [ -.209 ,  1.203 ]  & [  ,   ]  & [ -.6880000000000001 ,  1.707 ]  & [ -.8130000000000001 ,  1.64 ]  & [ -.966 ,  1.596 ]  & -  
- \addlinespace
- $ D_1 $ & .204  & .074  & .335 &  & .613  & .545  & .324 & - 
-  & [ -.361 ,  .768 ]  & [ -.454 ,  .602 ]  & [ -.205 ,  .876 ]  & [  ,   ]  & [ -.281 ,  1.507 ]  & [ -.378 ,  1.469 ]  & [ -.63 ,  1.278 ]  & -  
+ $ D_{3,4} $ & -1.802 & -1.291 & -1.124 & .632 \\ 
+ & [ -2.827 , -.778 ] & [ -2.267 , -.315 ] & [ -2.092 , -.156 ] & [ -.669 , 1.934 ] \\ 
+\addlinespace
+ $ D_2 $ & .175 & .195 & .497 & - \\ 
+ & [ -.526 , .876 ] & [ -.518 , .908 ] & [ -.209 , 1.203 ] & - \\ 
+\addlinespace
+ $ D_1 $ & .204 & .074 & .335 & - \\ 
+ & [ -.361 , .768 ] & [ -.454 , .602 ] & [ -.205 , .876 ] & - \\ 
+\addlinespace
 \midrule
- Muni FE & $ \times $ & $ \times $ &  & $ \times $ & $ \times $ & $ \times $ &  & $ \times $ 
- Year-month FE & $ \times $ & $ \times $ & $ \times $ & $ \times $ & $ \times $ & $ \times $ & $ \times $ & $ \times $ 
- State-Year trend &  &  & $ \times $ & $ \times $ &   &  & $ \times $ & $ \times $    Muni-calendar month FE &  &  & $ \times $ &  &   &  &  & $ \times $    \bottomrule
+  Rate per 1000 births &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ & -.628 & -.675 & -.786 & -.151 \\ 
+ & [ -2.49 , 1.233 ] & [ -2.563 , 1.213 ] & [ -2.766 , 1.194 ] & [ -11.148 , 10.845 ] \\ 
+\addlinespace
+ $ D_2 $ & .509 & .414 & .315 & - \\ 
+ & [ -.688 , 1.707 ] & [ -.813 , 1.64 ] & [ -.966 , 1.596 ] & - \\ 
+\addlinespace
+ $ D_1 $ & .613 & .545 & .324 & - \\ 
+ & [ -.281 , 1.507 ] & [ -.378 , 1.469 ] & [ -.63 , 1.278 ] & - \\ 
+\midrule
+  Muni FE & $ \times $ & $ \times $ &  & $ \times $  \\
+  Year-month FE & $ \times $ & $ \times $ & $ \times $ & $ \times $ \\
+  State-Year trend &  &  & $ \times $ & $ \times $ \\
+  Muni-calendar month FE &  &  & $ \times $ & \\
+\bottomrule
 \end{tabular}
-\caption*{\footnotesize{Notes: Standard errors clustered at the municipality-year-month level in M1 to M3; and at the municipality level in M4 }}  
+\caption*{\footnotesize{Notes: Standard errors clustered at the municipality-year-month level in M1--M3; and at the municipality level in M4.}}
 \end{table}
