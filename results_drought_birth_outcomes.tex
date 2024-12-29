@@ -1,0 +1,27 @@
+\section{Effects on birth outcomes}
+
+Drought severity can influence birth outcomes, such as LBW and VLBW, through competing mechanisms that may bias estimates. On the one hand, severe droughts may weaken pregnancies, leading to poorer outcomes for surviving babies. On the other, they can also increase miscarriages or stillbirths, leaving only stronger pregnancies to reach term. This selection effect can result in downward bias in magnitude, making observed negative effects appear smaller or even reversing their sign.
+
+%For example, less severe droughts (D1) might increase observed LBW cases, as more compromised pregnancies reach term. In contrast, more severe droughts (D4) may cause higher fetal loss, reducing observed LBW cases. If severe droughts disproportionately affect pregnancies with worse potential outcomes, their impact on LBW and VLBW may be underestimated.
+
+%Just for illustration purposes regarding my way to go on how to conduct the analysis that will be expanded to other variables, I will present here the analysis for a Very Low Birth Weigth (VLBW) measure. Just because, this is the most stable variable I have worked with. In the other section I present a similar analysis for other variables, and the problems I find and don't know what to do about them.
+
+
+\input{tables/TWFE_vlbw_tests}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Following the analysis proposed in \cite{deChaisemartin2023}, I analyze the weights given to each group-time contribution to the weighted sum of treatment effects. Focusing on the coefficient for "Severe droughts", it can be decomposed into two terms. The first term corresponds to the weighted sum of the effects of being exposed to severe drought conditions ($D^{Severe}_{i(m-1)y}$), across 16,327 municipality-month cells. Almost all these cells, except 5, receive positive weights summing to 1, which suggests that this term is less likely to be biased. The second term corresponds to the weighted sum of the effects of moderate drought conditions ($D^{Moderate}_{i(m-1)y}$), across 88,034 municipality-month cells. In this case, 50,757 cells receive positive weights summing to 0.3689, while 37,277 cells receive negative weights summing to -0.3689. If we assume that the effect of moderate droughts is homogeneous across municipalities and periods, the second term introduces no bias. However, this assumption is unlikely to hold in general. 
+
+Therefore, we need to take a closer look. One approach is to compare a "short" regression, which omits the moderate treatment, to a "long" regression that includes both treatments. Following \cite{deChaisemartin2023}, the coefficient on severe droughts in the short regression identifies the sum of two components: a weighted sum of the effects of severe droughts, where the weights sum to one, and a second contamination term associated with moderate droughts. The weights for the contamination term in the short regression do not necessarily sum to zero, and their magnitude depends on the overlap and variation of treatments. Including the moderate treatment in the long regression reduces the contamination but introduces a new set of weights that may exacerbate the bias under heterogeneous treatment effects. To evaluate this trade-off, it is possible to calculate a \textbf{maximal bias} by comparing the contamination weights in the short and long regressions, under the assumption that treatment effects are bounded. For now, I have run the short regression to examine its coefficient on severe droughts, leaving the full comparison and maximal bias analysis for later.

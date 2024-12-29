@@ -113,18 +113,22 @@ While this data is valuable, it does not cover the entire population as it exclu
 
 \section{Methods}
 
-As a first approach, I employ a two-way fixed-effects linear regression model (\cite{Bailey2015}, \cite{Mullins2020}, \cite{Cohen2022}). The unit of analysis is the municipality, while the time dimension is defined as the month-year of either birth or hospitalization, depending on the specific outcome being analyzed. The model is specified as follows:
+As a first approach, I employ a two-way fixed-effects linear regression model (\cite{Bailey2015}, \cite{Mullins2020}, \cite{Cohen2022}). Drought intensity is measured using CONAGUA's monthly Drought Monitor index whose scale ranges from abnormally dry (D0) to exceptional drought (D4). Categories D3-D4 are pooled together to ensure enough variation in the higher end of drought.
+
+The unit of analysis is the municipality, while the time dimension is defined as the month-year of either birth or hospitalization, depending on the specific outcome being analyzed. The model is specified as follows:
 
 \begin{align}
 \begin{aligned}
-Y_{imy} &= \beta_0 + \beta_1 D^{Moderate}_{i(m-1)y} + \beta_2 D^{Severe}_{i(m-1)y} + \phi_1 \cdot Temp_{imy} + \lambda_i + \lambda_{my} + \epsilon_{imy}
+Y_{imy} &= \beta_0 + \sum_{k=1}^{3/4} \beta_k D^k_{i(m-1)y} + \phi_1 \cdot Temp_{imy} + \lambda_i + \lambda_{my} + \epsilon_{im}
 \end{aligned}
-\label{eq:twfe_basic}
+\label{eq:temp_regression}
 \end{align}
 
-Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$. I pool categories D0 and D1 into "Moderate drought conditions" ($D^{Moderate}_{i(m-1)y}$) and categories D2 to D4 into "Severe drought conditions" ($D^{Severe}_{i(m-1)y}$). This aggregation, instead of including the 5 treatments, is motivated by concerns about the potential biases arising from having multiple treatments that switch on and off, as discussed in \cite{deChaisemartin2023} (I will conduct additional robustness checks as needed). 
+%Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$. I pool categories D0 and D1 into "Moderate drought conditions" ($D^{Moderate}_{i(m-1)y}$) and categories D2 to D4 into "Severe drought conditions" ($D^{Severe}_{i(m-1)y}$). This aggregation, instead of including the 5 treatments, is motivated by concerns about the potential biases arising from having multiple treatments that switch on and off, as discussed in \cite{deChaisemartin2023} (I will conduct additional robustness checks as needed). 
 
-Moreover, drought effects often accumulate and are not immediately observable because droughts typically intensify or recede gradually. Health outcomes, such as those associated with water scarcity or air quality, may take time to manifest. Therefore, a one-month lag in drought measures is used to better capture the delayed effects on current health outcomes. (Using contemporaneous and additional lags does not substantially change the results.)
+Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$.  $\sum_{k=0}^{3/4} \beta_k D_{ki(m-1)y}$ captures the effects of drought intensity across categories $D^0$ to $D^{3/4}$, measured in the previous month. Drought effects often accumulate and are not immediately observable because droughts typically intensify or recede gradually. Health outcomes, such as those associated with water scarcity or air quality, may take time to manifest. Therefore, a one-month lag in drought measures is used to better capture the delayed effects on current health outcomes. (Using contemporaneous and additional lags does not substantially change the results.)
+
+In this case $D^0$ is used as a control only and not as a treatment, since its definition is vague in the data and is not clear what should be the expected sign.
 
 The model incorporates municipality-specific fixed effects ($\lambda_i$) to control for time-invariant characteristics, month-by-year fixed effects ($\lambda_{my}$) to address unobserved factors that vary over time and affect all municipalities, and municipality-year fixed effects ($\lambda_{iy}$) to capture differential trends across municipalities. Additionally, I include a control for temperature ($Temp_{imy}$) to isolate the effects of drought conditions from temperature-related influences. (I have tested various specifications for temperature controls, and the results remain consistent across them.)
 
@@ -157,7 +161,7 @@ Parallel trends under Assumptions 4 and 5 in my setting mean that municipalities
 Just for illustration purposes regarding my way to go on how to conduct the analysis that will be expanded to other variables, I will present here the analysis for a Very Low Birth Weigth (VLBW) measure. Just because, this is the most stable variable I have worked with. In the other section I present a similar analysis for other variables, and the problems I find and don't know what to do about them.
 
 
-\input{tables/TWFE_vlbw_tests}
+ASlsls
 
 
 
