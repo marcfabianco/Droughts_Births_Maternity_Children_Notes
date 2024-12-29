@@ -1,0 +1,37 @@
+\begin{table}[!ht]
+\centering
+\caption{Effects of Drought on apgar_l7}\label{tab:twfe_apgar_l7}
+\fontsize{10pt}{12pt}\selectfont
+\begin{tabular}{lcccc}
+\toprule
+  Raw count/weighted &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &    -1.424 &     0.195 &     0.350 &    -0.203 \\ 
+ & [    -2.343 ,    -0.504 ] & [    -0.359 ,     0.749 ] & [    -0.216 ,     0.916 ] & [    -0.885 ,     0.479 ] \\ 
+\addlinespace
+ $ D_2 $ &     0.771 &     0.768 &     0.811 & - \\ 
+ & [     0.262 ,     1.280 ] & [     0.291 ,     1.245 ] & [     0.311 ,     1.310 ] & - \\ 
+\addlinespace
+ $ D_1 $ &     0.087 &    -0.146 &    -0.098 & - \\ 
+ & [    -0.255 ,     0.429 ] & [    -0.460 ,     0.168 ] & [    -0.431 ,     0.236 ] & - \\ 
+\addlinespace
+\midrule
+  Rate per 1000 births &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &     1.330 &     1.748 &     1.897 &    -5.501 \\ 
+ & [     0.097 ,     2.563 ] & [     0.491 ,     3.005 ] & [     0.599 ,     3.194 ] & [   -14.106 ,     3.104 ] \\ 
+\addlinespace
+ $ D_2 $ &     0.217 &     0.559 &     0.364 & - \\ 
+ & [    -0.656 ,     1.089 ] & [    -0.330 ,     1.449 ] & [    -0.564 ,     1.292 ] & - \\ 
+\addlinespace
+ $ D_1 $ &    -0.830 &    -0.231 &    -0.265 & - \\ 
+ & [    -1.445 ,    -0.216 ] & [    -0.856 ,     0.394 ] & [    -0.915 ,     0.386 ] & - \\ 
+\midrule
+  Muni FE & $ \times $ & $ \times $ &  & $ \times $  \\
+  Year-month FE & $ \times $ & $ \times $ & $ \times $ & $ \times $ \\
+  State-Year trend &  &  & $ \times $ & $ \times $ \\
+  Muni-calendar month FE &  &  & $ \times $ & \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize{Notes: Standard errors clustered at the municipality-year-month level in M1--M3; and at the municipality level in M4.}}
+\end{table}

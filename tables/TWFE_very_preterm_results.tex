@@ -1,0 +1,37 @@
+\begin{table}[!ht]
+\centering
+\caption{Effects of Drought on very_preterm}\label{tab:twfe_very_preterm}
+\fontsize{10pt}{12pt}\selectfont
+\begin{tabular}{lcccc}
+\toprule
+  Raw count/weighted &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &    -0.068 &    -0.028 &    -0.043 &    -0.592 \\ 
+ & [    -0.336 ,     0.201 ] & [    -0.265 ,     0.209 ] & [    -0.285 ,     0.199 ] & [    -0.821 ,    -0.363 ] \\ 
+\addlinespace
+ $ D_2 $ &    -0.022 &    -0.114 &    -0.106 & - \\ 
+ & [    -0.183 ,     0.140 ] & [    -0.274 ,     0.045 ] & [    -0.260 ,     0.048 ] & - \\ 
+\addlinespace
+ $ D_1 $ &     0.062 &    -0.027 &    -0.011 & - \\ 
+ & [    -0.054 ,     0.178 ] & [    -0.142 ,     0.089 ] & [    -0.130 ,     0.109 ] & - \\ 
+\addlinespace
+\midrule
+  Rate per 1000 births &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &     0.268 &     0.212 &     0.230 &    -9.868 \\ 
+ & [    -0.150 ,     0.687 ] & [    -0.219 ,     0.642 ] & [    -0.219 ,     0.680 ] & [   -19.533 ,    -0.202 ] \\ 
+\addlinespace
+ $ D_2 $ &    -0.049 &    -0.132 &    -0.163 & - \\ 
+ & [    -0.293 ,     0.194 ] & [    -0.388 ,     0.125 ] & [    -0.431 ,     0.106 ] & - \\ 
+\addlinespace
+ $ D_1 $ &    -0.026 &    -0.087 &    -0.121 & - \\ 
+ & [    -0.217 ,     0.164 ] & [    -0.288 ,     0.113 ] & [    -0.332 ,     0.089 ] & - \\ 
+\midrule
+  Muni FE & $ \times $ & $ \times $ &  & $ \times $  \\
+  Year-month FE & $ \times $ & $ \times $ & $ \times $ & $ \times $ \\
+  State-Year trend &  &  & $ \times $ & $ \times $ \\
+  Muni-calendar month FE &  &  & $ \times $ & \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize{Notes: Standard errors clustered at the municipality-year-month level in M1--M3; and at the municipality level in M4.}}
+\end{table}

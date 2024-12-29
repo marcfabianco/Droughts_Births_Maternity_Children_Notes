@@ -1,0 +1,37 @@
+\begin{table}[!ht]
+\centering
+\caption{Effects of Drought on csection}\label{tab:twfe_csection}
+\fontsize{10pt}{12pt}\selectfont
+\begin{tabular}{lcccc}
+\toprule
+  Raw count/weighted &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &    -7.371 &    -1.231 &     2.278 &     2.486 \\ 
+ & [   -12.401 ,    -2.341 ] & [    -6.895 ,     4.433 ] & [    -3.263 ,     7.818 ] & [    -1.072 ,     6.045 ] \\ 
+\addlinespace
+ $ D_2 $ &    -1.826 &    -1.597 &    -0.152 & - \\ 
+ & [    -6.974 ,     3.321 ] & [    -6.521 ,     3.328 ] & [    -5.165 ,     4.860 ] & - \\ 
+\addlinespace
+ $ D_1 $ &     2.275 &    -0.175 &     1.999 & - \\ 
+ & [    -1.222 ,     5.773 ] & [    -3.477 ,     3.128 ] & [    -1.275 ,     5.272 ] & - \\ 
+\addlinespace
+\midrule
+  Rate per 1000 births &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &     2.977 &     1.128 &    -0.014 &    -2.827 \\ 
+ & [    -1.261 ,     7.216 ] & [    -3.172 ,     5.428 ] & [    -4.480 ,     4.453 ] & [   -57.726 ,    52.072 ] \\ 
+\addlinespace
+ $ D_2 $ &    -0.924 &    -2.856 &    -3.738 & - \\ 
+ & [    -3.762 ,     1.915 ] & [    -5.755 ,     0.044 ] & [    -6.730 ,    -0.745 ] & - \\ 
+\addlinespace
+ $ D_1 $ &    -0.118 &    -1.650 &    -1.950 & - \\ 
+ & [    -2.223 ,     1.987 ] & [    -3.816 ,     0.516 ] & [    -4.188 ,     0.288 ] & - \\ 
+\midrule
+  Muni FE & $ \times $ & $ \times $ &  & $ \times $  \\
+  Year-month FE & $ \times $ & $ \times $ & $ \times $ & $ \times $ \\
+  State-Year trend &  &  & $ \times $ & $ \times $ \\
+  Muni-calendar month FE &  &  & $ \times $ & \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize{Notes: Standard errors clustered at the municipality-year-month level in M1--M3; and at the municipality level in M4.}}
+\end{table}

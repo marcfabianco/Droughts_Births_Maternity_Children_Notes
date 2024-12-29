@@ -1,0 +1,37 @@
+\begin{table}[!ht]
+\centering
+\caption{Effects of Drought on macrosom}\label{tab:twfe_macrosom}
+\fontsize{10pt}{12pt}\selectfont
+\begin{tabular}{lcccc}
+\toprule
+  Raw count/weighted &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &    -2.804 &    -1.247 &    -1.124 &    -2.797 \\ 
+ & [    -4.193 ,    -1.415 ] & [    -2.090 ,    -0.403 ] & [    -1.984 ,    -0.264 ] & [    -4.691 ,    -0.902 ] \\ 
+\addlinespace
+ $ D_2 $ &    -0.466 &    -0.249 &    -0.057 & - \\ 
+ & [    -1.024 ,     0.092 ] & [    -0.790 ,     0.291 ] & [    -0.542 ,     0.429 ] & - \\ 
+\addlinespace
+ $ D_1 $ &    -0.232 &    -0.237 &    -0.219 & - \\ 
+ & [    -0.575 ,     0.111 ] & [    -0.572 ,     0.099 ] & [    -0.561 ,     0.124 ] & - \\ 
+\addlinespace
+\midrule
+  Rate per 1000 births &\multicolumn{1}{c}{M1}&\multicolumn{1}{c}{M2}&\multicolumn{1}{c}{M3}&\multicolumn{1}{c}{M4} \\
+\midrule
+ $ D_{3,4} $ &     0.219 &     0.177 &    -0.113 &   -21.579 \\ 
+ & [    -1.116 ,     1.554 ] & [    -1.179 ,     1.533 ] & [    -1.539 ,     1.312 ] & [   -52.997 ,     9.838 ] \\ 
+\addlinespace
+ $ D_2 $ &     0.832 &     0.750 &     0.824 & - \\ 
+ & [    -0.044 ,     1.707 ] & [    -0.147 ,     1.648 ] & [    -0.106 ,     1.754 ] & - \\ 
+\addlinespace
+ $ D_1 $ &    -0.326 &    -0.337 &    -0.310 & - \\ 
+ & [    -0.945 ,     0.294 ] & [    -0.983 ,     0.310 ] & [    -0.982 ,     0.362 ] & - \\ 
+\midrule
+  Muni FE & $ \times $ & $ \times $ &  & $ \times $  \\
+  Year-month FE & $ \times $ & $ \times $ & $ \times $ & $ \times $ \\
+  State-Year trend &  &  & $ \times $ & $ \times $ \\
+  Muni-calendar month FE &  &  & $ \times $ & \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize{Notes: Standard errors clustered at the municipality-year-month level in M1--M3; and at the municipality level in M4.}}
+\end{table}
