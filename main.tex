@@ -113,58 +113,29 @@ While this data is valuable, it does not cover the entire population as it exclu
 
 \section{Methods}
 
-As a first approach, I employ a two-way fixed-effects linear regression model (\cite{Bailey2015}, \cite{Mullins2020}, \cite{Cohen2022}). The unit of analysis is the municipality, while the time dimension is defined as the month-year of either birth or hospitalization, depending on the specific outcome being analyzed. The model is specified as follows:
+As a first approach, I employ a two-way fixed-effects linear regression model (\cite{Bailey2015}, \cite{Mullins2020}, \cite{Cohen2022}). Drought intensity is measured using CONAGUA's monthly Drought Monitor index whose scale ranges from abnormally dry (D0) to exceptional drought (D4). Categories D3-D4 are pooled together to ensure enough variation in the higher end of drought.
+
+The unit of analysis is the municipality, while the time dimension is defined as the month-year of either birth or hospitalization, depending on the specific outcome being analyzed. The model is specified as follows:
 
 \begin{align}
 \begin{aligned}
-Y_{imy} &= \beta_0 + \beta_1 D^{Moderate}_{i(m-1)y} + \beta_2 D^{Severe}_{i(m-1)y} + \phi_1 \cdot Temp_{imy} + \lambda_i + \lambda_{my} + \epsilon_{imy}
+Y_{imy} &= \beta_0 + \sum_{k=1}^{3/4} \beta_k D^k_{i(m-1)y} + \phi_1 \cdot Temp_{imy} + \lambda_i + \lambda_{my} + \epsilon_{im}
 \end{aligned}
-\label{eq:twfe_basic}
+\label{eq:temp_regression}
 \end{align}
 
-Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$. I pool categories D0 and D1 into "Moderate drought conditions" ($D^{Moderate}_{i(m-1)y}$) and categories D2 to D4 into "Severe drought conditions" ($D^{Severe}_{i(m-1)y}$). This aggregation, instead of including the 5 treatments, is motivated by concerns about the potential biases arising from having multiple treatments that switch on and off, as discussed in \cite{deChaisemartin2023} (I will conduct additional robustness checks as needed). 
+%Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$. I pool categories D0 and D1 into "Moderate drought conditions" ($D^{Moderate}_{i(m-1)y}$) and categories D2 to D4 into "Severe drought conditions" ($D^{Severe}_{i(m-1)y}$). This aggregation, instead of including the 5 treatments, is motivated by concerns about the potential biases arising from having multiple treatments that switch on and off, as discussed in \cite{deChaisemartin2023} (I will conduct additional robustness checks as needed). 
 
-Moreover, drought effects often accumulate and are not immediately observable because droughts typically intensify or recede gradually. Health outcomes, such as those associated with water scarcity or air quality, may take time to manifest. Therefore, a one-month lag in drought measures is used to better capture the delayed effects on current health outcomes. (Using contemporaneous and additional lags does not substantially change the results.)
+Here, $Y_{imy}$ represents the outcome in municipality $i$, during month $m$, and year $y$.  $\sum_{k=0}^{3/4} \beta_k D_{ki(m-1)y}$ captures the effects of drought intensity across categories $D^0$ to $D^{3/4}$, measured in the previous month. Drought effects often accumulate and are not immediately observable because droughts typically intensify or recede gradually. Health outcomes, such as those associated with water scarcity or air quality, may take time to manifest. Therefore, a one-month lag in drought measures is used to better capture the delayed effects on current health outcomes. (Using contemporaneous and additional lags does not substantially change the results.)
+
+In this case $D^0$ is used as a control only and not as a treatment, since its definition is vague in the data and is not clear what should be the expected sign.
 
 The model incorporates municipality-specific fixed effects ($\lambda_i$) to control for time-invariant characteristics, month-by-year fixed effects ($\lambda_{my}$) to address unobserved factors that vary over time and affect all municipalities, and municipality-year fixed effects ($\lambda_{iy}$) to capture differential trends across municipalities. Additionally, I include a control for temperature ($Temp_{imy}$) to isolate the effects of drought conditions from temperature-related influences. (I have tested various specifications for temperature controls, and the results remain consistent across them.)
 
-\subsection{Alternative models and estimators}
-
-Taking into account the current literature, I contrast different models.
-
-\textbf{Basic TWFE}. The first is a regular TWFE model as presented in \ref{eq:twfe_basic}. The main identifying assumption is that, conditional on the fixed effects and temperatures, the remaining variation from drought intensity is exogenous and uncorrelated with other factors influencing health and birth outcomes. This model implicitly assumes parallel trends in the sense that, absent changes in drought conditions, the expected outcome evolution for groups with the same pre-treatment drought levels would have followed a common trend over time. In this setting, with two treatments that switch on and off, the counterfactual trend for each treatment group is defined relative to groups where drought conditions remain constant across periods (If my interpretation of \cite{deChaisemartin20203} is not flawed) .
-
-\textbf{TWFE with state-specific linear time trends}. Building on the above base model, I introduce state-specific linear yearly trends. This accounts for unobserved, time-varying state-level factors that may linearly affect birth outcomes over time, ensuring that the estimated drought effects are not confounded by differential long-term trends across states.
-
-\textbf{TWFE with state-specific linear time trends}. Building on the above base model, I introduce other sets of controls, including state-specific linear yearly trends. These trends account for heterogeneity in long-term birth outcome patterns across states, which may arise due to unobserved state-level factors such as local policies, healthcare improvements, or economic conditions evolving over time. 
-
-\textbf{TWFE with state-specific linear time trends and seasonal controls}. As in \cite{Cohen2022}, I include a full set of municipality-by-calendar month fixed effects to control for seasonality in birth outcomes that may vary across municipalities. This allows me to account for patterns where births occurring in specific months, when temperatures or other environmental conditions tend to remain similar over time, are systematically associated with different outcomes. Combined with state-specific linear yearly trends, this specification addresses both regional long-term dynamics and local seasonal variations.
-
-Up to here, the TWFE model relies on its standard assumptions. However, it has been shown (\cite{deChaisemartin2020}, \cite{deChaisemartin2023}) that: 1) With a single treatment turning on and off at different times, and under heterogeneous treatment effects, the TWFE estimator identifies a weighted sum of group-time treatment effects. The weights can be negative, which may distort the estimates or even reverse their sign. 2) When multiple treatments are included, the issue becomes more complex due to contamination bias. This occurs because the estimator combines comparisons between groups exposed to different treatments, which can mix the effect of one treatment with the effects of others. As a result, the coefficient on each treatment may partially reflect the effects of other treatments, introducing bias when treatment effects are heterogeneous.
-
-
-\textbf{Alternative estimator (deCh-H)}. Finally, I also test the alternative estimator from \cite{deChaisemartin2023}, which is fit for my case. My case involves two mutually exclusive treatments, defined at the municipality and year-month level, that switch on and off dynamically.
-
-The intuition of the estimator relies on identifying variation in treatment that comes from groups whose treatment changes between two periods while other treatments remain constant. By comparing these "switching" groups to others with identical treatment histories that do not change, it isolates the impact of the treatment transition. This method uses within-group and over-time variation to construct counterfactuals, focusing on more localized comparisons than standard TWFE.
-
-The estimator relies on two assumptions: strong exogeneity and parallel trends, as defined in Assumptions 4 and 5 \cite{deChaisemartin2023}. Assumption 4 identifies treatment effects for groups whose treatment changes between consecutive periods $t-1$ and $t$, conditioning on their treatment status at $t-1$. This focuses on transitions where comparisons rely on the previous treatment state to construct counterfactuals. Assumption 5 shifts the conditioning to treatment status at $t$, expanding identification to include transitions defined by the current treatment state, rather than past status. Together, these assumptions broaden the set of transitions for which effects can be identified, including both "switching into" and "switching out of" treatment.
-
-Parallel trends under Assumptions 4 and 5 in my setting mean that municipalities with stable drought conditions provide a counterfactual for those transitioning between treatments over consecutive months. This requires that the change in health outcomes for municipalities transitioning between drought categories matches the change observed in municipalities with stable conditions during the same period, conditional on their treatment histories. The comparison relies on consecutive-period dynamics, so counterfactual trends are constructed from groups with similar short-term treatment trajectories.
-
-
-\section{Very Low Birth Weight}
-
-Just for illustration purposes regarding my way to go on how to conduct the analysis that will be expanded to other variables, I will present here the analysis for a Very Low Birth Weigth (VLBW) measure. Just because, this is the most stable variable I have worked with. In the other section I present a similar analysis for other variables, and the problems I find and don't know what to do about them.
-
-
-ASlsls
 
 
 
-
-Following the analysis proposed in \cite{deChaisemartin2023}, I analyze the weights given to each group-time contribution to the weighted sum of treatment effects. Focusing on the coefficient for "Severe droughts", it can be decomposed into two terms. The first term corresponds to the weighted sum of the effects of being exposed to severe drought conditions ($D^{Severe}_{i(m-1)y}$), across 16,327 municipality-month cells. Almost all these cells, except 5, receive positive weights summing to 1, which suggests that this term is less likely to be biased. The second term corresponds to the weighted sum of the effects of moderate drought conditions ($D^{Moderate}_{i(m-1)y}$), across 88,034 municipality-month cells. In this case, 50,757 cells receive positive weights summing to 0.3689, while 37,277 cells receive negative weights summing to -0.3689. If we assume that the effect of moderate droughts is homogeneous across municipalities and periods, the second term introduces no bias. However, this assumption is unlikely to hold in general. 
-
-Therefore, we need to take a closer look. One approach is to compare a "short" regression, which omits the moderate treatment, to a "long" regression that includes both treatments. Following \cite{deChaisemartin2023}, the coefficient on severe droughts in the short regression identifies the sum of two components: a weighted sum of the effects of severe droughts, where the weights sum to one, and a second contamination term associated with moderate droughts. The weights for the contamination term in the short regression do not necessarily sum to zero, and their magnitude depends on the overlap and variation of treatments. Including the moderate treatment in the long regression reduces the contamination but introduces a new set of weights that may exacerbate the bias under heterogeneous treatment effects. To evaluate this trade-off, it is possible to calculate a \textbf{maximal bias} by comparing the contamination weights in the short and long regressions, under the assumption that treatment effects are bounded. For now, I have run the short regression to examine its coefficient on severe droughts, leaving the full comparison and maximal bias analysis for later.
+\input{tables/TWFE_vlbw_tests}
 
 \subsection{Other robustness tests}
 
